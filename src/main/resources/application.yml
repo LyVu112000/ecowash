@@ -1,0 +1,16 @@
+spring:
+  #Spring data source mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecowash-thesis-db?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: lyvuthesis@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+
