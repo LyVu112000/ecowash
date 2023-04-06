@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vuly.thesis.ecowash.core.entity.ReceivedReceipt;
+import vuly.thesis.ecowash.core.payload.dto.BriefDataDto;
+import vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,7 +22,7 @@ public interface IReceivedReceiptRepository extends BaseJpaRepository<ReceivedRe
             "where ((t2.status != 'DONE')  OR (t2.status = 'DONE' AND t2.is_flag_error = true)) AND t1.received_receipt_id = :receiptId AND t1.tenant_id = :tenantId ", nativeQuery = true)
     Integer findNumberDeliveryReceiptHasNotDone(@Param("receiptId") long receiptId, @Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.BriefDataDto(id, code) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.BriefDataDto(id, code) " +
             "from ReceivedReceipt " +
             "where code like %:code% AND tenantId = :tenantId AND (:status is null or  status IN (:status))")
     List<BriefDataDto> findCodeLike(String code, String status, long tenantId, Pageable pageable);
@@ -41,17 +43,17 @@ public interface IReceivedReceiptRepository extends BaseJpaRepository<ReceivedRe
             "AND status != 'CANCEL' and tenant_id = :tenantId ", nativeQuery = true)
     Integer getReceivedReceiptNumberCurrentDay(@Param("customerId") Long customerId, @Param("fromDate") Instant fromDate,  @Param("toDate") Instant toDate, @Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.ReceiptSummaryListDto(rr.status, count(rr.status)) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto(rr.status, count(rr.status)) " +
             "from ReceivedReceipt rr " +
             "where rr.tenantId = :tenantId and rr.isRewash = false GROUP BY rr.status ")
     List<ReceiptSummaryListDto> getReceivedReceiptSummary(@Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.ReceiptSummaryListDto(rr.status, count(rr.status)) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto(rr.status, count(rr.status)) " +
             "from ReceivedReceipt rr " +
             "where rr.tenantId = :tenantId and rr.isRewash = true GROUP BY rr.status ")
     List<ReceiptSummaryListDto> getRewashReceiptSummary(@Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.BriefDataDto(id, code) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.BriefDataDto(id, code) " +
             "from ReceivedReceipt " +
             "where customer.id = :customerId AND tenantId = :tenantId AND status = 'PACKING' AND productType.id = :productTypeId" +
             " AND receivedDate between  :fromDate AND :toDate")

@@ -2,12 +2,17 @@ package vuly.thesis.ecowash.core.repository.core;
 
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vuly.thesis.ecowash.core.entity.DeliveryReceipt;
+import vuly.thesis.ecowash.core.payload.dto.BriefDataDto;
+import vuly.thesis.ecowash.core.payload.dto.ReceiptByDay;
+import vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,7 +24,7 @@ public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryRe
     @Query(value = "SELECT MAX(c.sequence_number) FROM core.delivery_receipt c WHERE c.code like %:code% AND tenant_id = :tenantId ", nativeQuery = true)
     Integer findByLikeCodeAndMaxSequenceNumber(@Param("code") String code, @Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.ReceiptByDay(day(deliveryDate), count(id), 'PG') " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptByDay(day(deliveryDate), count(id), 'PG') " +
             "from DeliveryReceipt " +
             "where month(deliveryDate) = :month AND year(deliveryDate) = :year AND tenantId = :tenantId GROUP BY day(deliveryDate)")
     List<ReceiptByDay> getTotalReceiptByMonthAndYear(int month, int year, @Param("tenantId") long tenantId);
@@ -34,10 +39,10 @@ public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryRe
             "            group by t2.product_item_id " , nativeQuery = true)
     Long getTotalActualDeliveryByReceivedReceiptId(@Param("receiptId") Long receiptId, @Param("productItemId") Long productItemId, @Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.BriefDataDto(id, code) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.BriefDataDto(id, code) " +
             "from DeliveryReceipt " +
             "where code like %:code%  AND (:status is null or  status IN (:status)) AND tenantId = :tenantId")
-    List<BriefDataDto> findCodeLike(String code, String status,  long tenantId, Pageable pageable);
+    List<BriefDataDto> findCodeLike(String code, String status, long tenantId, Pageable pageable);
 
     @Query(value = "SELECT count(*) " +
             "FROM core.delivery_receipt " +
@@ -52,7 +57,7 @@ public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryRe
             "where dr.id = :id and rr.status = 'DONE' and dr.tenant_id = :tenantId" , nativeQuery = true)
     Optional<DeliveryReceipt> checkExistedReceivedReceiptDone(@Param("id") Long id, @Param("tenantId") long tenantId);
 
-    @Query(value = "select new ebst.ecowash.core.payload.dto.ReceiptSummaryListDto(dr.status, count(dr.status)) " +
+    @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto(dr.status, count(dr.status)) " +
             "from DeliveryReceipt dr " +
             "where dr.tenantId = :tenantId GROUP BY dr.status")
     List<ReceiptSummaryListDto> getDeliveryReceiptSummary(@Param("tenantId") long tenantId);
