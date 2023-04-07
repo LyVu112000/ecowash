@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IDepartmentRepository extends BaseJpaRepository<Department,Long>, JpaSpecificationExecutor<Department> {
-    Optional<Department> findByCodeOrNameAndTenantId(String code, String name, long tenantId);
+    Optional<Department> findByCodeOrName(String code, String name);
 
-    List<Department> findByNameAndTenantIdAndIdNot(String name, long tenantId, long id);
+    List<Department> findByNameAndIdNot(String name, long id);
 
 
 }

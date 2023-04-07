@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ISpecialInstructionRepository extends BaseJpaRepository<SpecialInstruction,Long>, JpaSpecificationExecutor<SpecialInstruction> {
-    Optional<SpecialInstruction> findByValueAndTenantId(String value, long tenantId);
-    List<SpecialInstruction> findByTenantIdOrderByIdAsc(long tenantId);
+    Optional<SpecialInstruction> findByValue(String value);
+    List<SpecialInstruction> findByOrderByIdAsc();
 
     @Query(value = "select si.value from special_instruction si " +
             "LEFT JOIN special_instruction_receipt sir ON sir.special_instruction_id = si.id " +
@@ -21,8 +21,8 @@ public interface ISpecialInstructionRepository extends BaseJpaRepository<Special
     List<String> findByDeliveryReceiptId (@Param("deliveryReceiptId") long deliveryReceiptId);
 
     @Query("SELECT name FROM SpecialInstruction WHERE tenantId = ?1 AND value IN (?2)")
-    List<String> findByTenantIdAndValueIn(Long tenantId, List<String> values);
+    List<String> findByValueIn(List<String> values);
 
     @Query("SELECT name FROM SpecialInstruction WHERE tenantId = ?1 AND id IN (?2)")
-    List<String> findByTenantIdAndIdIn(Long tenantId, List<Long> ids);
+    List<String> findByIdIn(List<Long> ids);
 }

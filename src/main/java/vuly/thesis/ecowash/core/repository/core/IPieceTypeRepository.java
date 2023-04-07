@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IPieceTypeRepository extends BaseJpaRepository<PieceType,Long>, JpaSpecificationExecutor<PieceType> {
-    Optional<PieceType> findByValueAndTenantId(String value, long tenantId);
-    List<PieceType> findByTenantIdOrderByIdAsc(long tenantId);
+    Optional<PieceType> findByValue(String value);
+
+    List<PieceType> findByOrderByIdAsc();
 }

@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IPaidByRepository extends BaseJpaRepository<PaidBy,Long>, JpaSpecificationExecutor<PaidBy> {
-    Optional<PaidBy> findByValueAndTenantId(String value, long tenantId);
-    List<PaidBy> findByTenantIdOrderByIdAsc(long tenantId);
+    Optional<PaidBy> findByValue(String value);
+    List<PaidBy> findByOrderByIdAsc();
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @NoRepositoryBean
 public interface BaseJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
-	Optional<T> findByIdAndTenantId(ID id, long tenantId);
+	Optional<T> findById(ID id);
 }

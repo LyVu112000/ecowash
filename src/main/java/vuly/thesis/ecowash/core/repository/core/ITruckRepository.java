@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface ITruckRepository extends BaseJpaRepository<Truck,Long>, JpaSpecificationExecutor<Truck> {
 
-    @Query(value = "SELECT * FROM truck s WHERE s.code = :code AND s.tenant_id = :tenantId AND s.deleted = false ORDER BY s.id DESC LIMIT 1", nativeQuery = true)
-    Optional<Truck> findDuplicatedData(@Param("code") String truckCode, @Param("tenantId") long tenantId);
+    @Query(value = "SELECT * FROM truck s WHERE s.code = :code AND s.deleted = false ORDER BY s.id DESC LIMIT 1", nativeQuery = true)
+    Optional<Truck> findDuplicatedData(@Param("code") String truckCode);
 
-    Optional<Truck> findByIdAndStatusAndTenantId(Long id, Status status, Long tenantId);
+    Optional<Truck> findByIdAndStatus(Long id, Status status);
 }

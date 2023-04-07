@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IProductGroupRepository extends BaseJpaRepository<ProductGroup, Long>, JpaSpecificationExecutor<ProductGroup> {
-    Optional<ProductGroup> findByCodeOrNameAndTenantId(String code, String name, long tenantId);
-    List<ProductGroup> findByNameAndTenantIdAndIdNot(String name, long tenantId, long id);
-    Boolean existsByIdAndActiveAndTenantId(Long id, boolean active, long tenantId);
+    Optional<ProductGroup> findByCodeOrName(String code, String name);
+    List<ProductGroup> findByNameAndIdNot(String name, long id);
+    Boolean existsByIdAndActive(Long id, boolean active);
 
 }

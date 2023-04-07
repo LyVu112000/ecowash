@@ -18,7 +18,7 @@ public interface IItemReceivedRepository extends BaseJpaRepository<ItemReceived,
             "   END) AS total_delivery " +
             "FROM item_received ir " +
             "   LEFT JOIN item_delivery itd ON itd.product_item_id = ir.product_item_id " +
-            "WHERE ir.tenant_id = ?1 AND ir.received_receipt_id IN(?2) AND itd.received_receipt_id in(?2) " +
+            "WHERE  ir.received_receipt_id IN(?2) AND itd.received_receipt_id in(?2) " +
             "GROUP BY ir.id", nativeQuery = true)
-    List<Object[]> getTotalDeliverable(Long tenantId, List<Long> receivedReceiptId);
+    List<Object[]> getTotalDeliverable(List<Long> receivedReceiptId);
 }

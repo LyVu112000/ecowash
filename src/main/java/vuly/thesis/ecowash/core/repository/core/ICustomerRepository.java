@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface ICustomerRepository extends BaseJpaRepository<Customer,Long>, JpaSpecificationExecutor<Customer> {
 
-    Boolean existsByCodeAndTenantId(String code, Long tenantId);
+    Boolean existsByCode(String code);
 
     List<Customer> findByTenantIdAndIdIn(Long tenantId, List<Long> ids);
-    Customer findByIdAndActiveIsTrueAndTenantId(long id, Long tenantId);
+    Customer findByIdAndActiveIsTrue(long id);
 }

@@ -18,16 +18,16 @@ import java.util.Optional;
 
 @Repository
 public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryReceipt, Long>, JpaSpecificationExecutor<DeliveryReceipt> {
-    @Query(value = "select SUM(number_delivery) total_delivery from item_delivery where delivery_receipt_id = :receiptId AND tenant_id = :tenantId ", nativeQuery = true)
-    Long getTotalDeliveryByReceiptId(@Param("receiptId") Long receiptId, @Param("tenantId") long tenantId);
+    @Query(value = "select SUM(number_delivery) total_delivery from item_delivery where delivery_receipt_id = :receiptId   ", nativeQuery = true)
+    Long getTotalDeliveryByReceiptId(@Param("receiptId") Long receiptId );
 
-    @Query(value = "SELECT MAX(c.sequence_number) FROM core.delivery_receipt c WHERE c.code like %:code% AND tenant_id = :tenantId ", nativeQuery = true)
-    Integer findByLikeCodeAndMaxSequenceNumber(@Param("code") String code, @Param("tenantId") long tenantId);
+    @Query(value = "SELECT MAX(c.sequence_number) FROM core.delivery_receipt c WHERE c.code like %:code%   ", nativeQuery = true)
+    Integer findByLikeCodeAndMaxSequenceNumber(@Param("code") String code );
 
     @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptByDay(day(deliveryDate), count(id), 'PG') " +
             "from DeliveryReceipt " +
-            "where month(deliveryDate) = :month AND year(deliveryDate) = :year AND tenantId = :tenantId GROUP BY day(deliveryDate)")
-    List<ReceiptByDay> getTotalReceiptByMonthAndYear(int month, int year, @Param("tenantId") long tenantId);
+            "where month(deliveryDate) = :month AND year(deliveryDate) = :year GROUP BY day(deliveryDate)")
+    List<ReceiptByDay> getTotalReceiptByMonthAndYear(int month, int year );
 
     @Query(value = "select COALESCE(SUM(number_delivery_actual),0) - t1.number_received " +
             "            from (select received_receipt_id, product_item_id, tenant_id, SUM(number_received) as number_received from item_received " +
@@ -35,30 +35,29 @@ public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryRe
             "            left join item_delivery t2 on t1.product_item_id = t2.product_item_id " +
             "            where t1.received_receipt_id = :receiptId and t2.received_receipt_id = :receiptId and t1.product_item_id = :productItemId " +
             "            and t2.delivery_receipt_id in (select id from delivery_receipt where status = 'DONE') " +
-            "            and t1.tenant_id = :tenantId " +
             "            group by t2.product_item_id " , nativeQuery = true)
-    Long getTotalActualDeliveryByReceivedReceiptId(@Param("receiptId") Long receiptId, @Param("productItemId") Long productItemId, @Param("tenantId") long tenantId);
+    Long getTotalActualDeliveryByReceivedReceiptId(@Param("receiptId") Long receiptId, @Param("productItemId") Long productItemId );
 
     @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.BriefDataDto(id, code) " +
             "from DeliveryReceipt " +
-            "where code like %:code%  AND (:status is null or  status IN (:status)) AND tenantId = :tenantId")
-    List<BriefDataDto> findCodeLike(String code, String status, long tenantId, Pageable pageable);
+            "where code like %:code%  AND (:status is null or  status IN (:status))")
+    List<BriefDataDto> findCodeLike(String code, String status, Pageable pageable);
 
     @Query(value = "SELECT count(*) " +
             "FROM core.delivery_receipt " +
             "where customer_id = :customerId AND (delivery_date BETWEEN :fromDate AND :toDate) " +
-            "AND status in ('DELIVERY', 'DONE') and tenant_id = :tenantId ", nativeQuery = true)
-    Integer getDeliveryReceiptNumberCurrentDay(@Param("customerId") Long customerId, @Param("fromDate") Instant fromDate,  @Param("toDate") Instant toDate, @Param("tenantId") long tenantId);
+            "AND status in ('DELIVERY', 'DONE')   ", nativeQuery = true)
+    Integer getDeliveryReceiptNumberCurrentDay(@Param("customerId") Long customerId, @Param("fromDate") Instant fromDate,  @Param("toDate") Instant toDate );
 
     @Query(value = "SELECT * " +
             "FROM core.delivery_receipt dr " +
             "left join delivery_link_received dlr on dlr.delivery_receipt_id = dr.id " +
             "left join received_receipt rr on rr.id = dlr.received_receipt_id " +
-            "where dr.id = :id and rr.status = 'DONE' and dr.tenant_id = :tenantId" , nativeQuery = true)
-    Optional<DeliveryReceipt> checkExistedReceivedReceiptDone(@Param("id") Long id, @Param("tenantId") long tenantId);
+            "where dr.id = :id and rr.status = 'DONE' " , nativeQuery = true)
+    Optional<DeliveryReceipt> checkExistedReceivedReceiptDone(@Param("id") Long id );
 
     @Query(value = "select new vuly.thesis.ecowash.core.payload.dto.ReceiptSummaryListDto(dr.status, count(dr.status)) " +
             "from DeliveryReceipt dr " +
-            "where dr.tenantId = :tenantId GROUP BY dr.status")
-    List<ReceiptSummaryListDto> getDeliveryReceiptSummary(@Param("tenantId") long tenantId);
+            " GROUP BY dr.status")
+    List<ReceiptSummaryListDto> getDeliveryReceiptSummary();
 }

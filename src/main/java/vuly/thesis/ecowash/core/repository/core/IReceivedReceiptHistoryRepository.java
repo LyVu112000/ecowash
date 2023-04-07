@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IReceivedReceiptHistoryRepository extends BaseJpaRepository<ReceivedReceiptHistory, Long>, JpaSpecificationExecutor<ReceivedReceiptHistory> {
-    List<ReceivedReceiptHistory> findByReceivedIdAndTenantId(Long id, Long tenantId);
+    List<ReceivedReceiptHistory> findByReceivedId(Long id);
 }
