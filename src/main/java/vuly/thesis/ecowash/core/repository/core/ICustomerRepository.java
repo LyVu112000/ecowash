@@ -11,6 +11,6 @@ public interface ICustomerRepository extends BaseJpaRepository<Customer,Long>, J
 
     Boolean existsByCode(String code);
 
-    List<Customer> findByTenantIdAndIdIn(Long tenantId, List<Long> ids);
+    List<Customer> findByIdIn(List<Long> ids);
     Customer findByIdAndActiveIsTrue(long id);
 }

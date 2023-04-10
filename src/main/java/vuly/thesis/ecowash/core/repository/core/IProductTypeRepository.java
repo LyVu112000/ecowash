@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface IProductTypeRepository extends BaseJpaRepository<ProductType,Long>, JpaSpecificationExecutor<ProductType> {
     Optional<ProductType> findByValue(String value);
-    List<ProductType> findByTenantIdOrderByIdAsc();
+    List<ProductType> findByOrderByIdAsc();
 }
