@@ -36,9 +36,6 @@ public abstract class JpaEntity implements Serializable {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
 
-    @Column(name = "tenant_id", columnDefinition = "bigint(20) default 1")
-    private Long tenantId;
-
     @Column(name = "date_created")
     @CreationTimestamp
     private Instant dateCreated;
@@ -54,10 +51,6 @@ public abstract class JpaEntity implements Serializable {
     @Column(name = "created_by")
     @CreatedBy
     private String createdBy;
-
-    @Version
-    @JsonIgnore
-    private Long version;
 
 }
 
