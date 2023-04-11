@@ -55,6 +55,7 @@ public class ReceivedReceiptService {
     private final ReceivedReceiptGenerator receivedReceiptGenerator;
     private final GetDeliveryCodeDAO getDeliveryCodeDAO;
     private final ReceivedReceiptHistoryRepository receiptHistoryRepository;
+    private final SecurityService securityService;
 
     public ReceivedReceipt create(ReceivedReceiptCreateRequest request) {
         ReceivedReceipt receivedReceipt = createNewReceipt(request);
@@ -191,7 +192,7 @@ public class ReceivedReceiptService {
         }
 
         if(getStatusByCustomerSignature(request.getSignatureCustomer()).equals(ReceiptStatus.STAFF_RECEIVED)) {
-            Optional<Staff> staffOpt = staffRepository.findById(securityService.getUser().getStaffId());
+            Optional<Staff> staffOpt = staffRepository.findById(securityService.getStaffId());
             receivedReceiptBuilder.status(ReceiptStatus.STAFF_RECEIVED);
             if (staffOpt.isPresent() && (staffOpt.get().getSignature() == null || staffOpt.get().getSignature().equals("{}"))) {
                 receivedReceiptBuilder.signatureStaff(request.getSignatureStaff());
@@ -283,7 +284,7 @@ public class ReceivedReceiptService {
 
         if(getStatusByCustomerSignature(request.getSignatureCustomer()).equals(ReceiptStatus.STAFF_RECEIVED) &&
                 receivedReceipt.getStatus().equals(ReceiptStatus.WAITING)) {
-            Optional<Staff> staffOpt = staffRepository.findById(securityService.getUser().getStaffId());
+            Optional<Staff> staffOpt = staffRepository.findById(securityService.getStaffId());
             receivedReceipt.setStatus(ReceiptStatus.STAFF_RECEIVED);
             if (staffOpt.isPresent() && (staffOpt.get().getSignature() == null || staffOpt.get().getSignature().equals("{}"))) {
                 throw new AppException(4202);

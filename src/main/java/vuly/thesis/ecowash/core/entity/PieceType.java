@@ -10,7 +10,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Audited
-@Table(name = "piece_type", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "value"})})
+@Table(name = "piece_type")
 @Getter
 @Setter
 @Builder(toBuilder=true)

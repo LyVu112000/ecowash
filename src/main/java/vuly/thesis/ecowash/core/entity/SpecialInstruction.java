@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Audited
-@Table(name = "special_instruction", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "value"})})
+@Table(name = "special_instruction")
 @Builder(toBuilder=true)
 @Getter
 @Setter

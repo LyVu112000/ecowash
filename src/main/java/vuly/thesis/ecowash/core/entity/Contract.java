@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Audited
-@Table(name = "contract", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "code"})})
+@Table(name = "contract")
 @Getter
 @Setter
 @Builder(toBuilder=true)

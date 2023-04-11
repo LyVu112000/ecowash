@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Audited
-@Table(name = "delivery_receipt_history", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "id"})})
+@Table(name = "delivery_receipt_history")
 @Getter
 @Setter
 @Builder(toBuilder=true)

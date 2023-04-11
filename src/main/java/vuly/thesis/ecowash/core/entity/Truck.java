@@ -11,7 +11,7 @@ import java.time.Instant;
 
 @Entity
 @Audited
-@Table(name = "truck", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "code"})})
+@Table(name = "truck")
 @Getter
 @Setter
 @Builder(toBuilder=true)

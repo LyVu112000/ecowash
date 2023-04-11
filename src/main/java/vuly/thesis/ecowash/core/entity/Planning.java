@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Audited
-@Table(name = "planning", uniqueConstraints = {@UniqueConstraint(columnNames = {"tenant_id", "code"})})
+@Table(name = "planning")
 @Getter
 @Setter
 @Builder(toBuilder=true)
