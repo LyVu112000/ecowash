@@ -1,16 +1,24 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /core
+  max-http-header-size: 20000
+
 spring:
-  #Spring data source mysql
-  jpa:
-    hibernate:
-      ddl-auto: update
-    generate-ddl: true
-    properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
-  datasource:
-    url: jdbc:mysql://localhost:3306/ecowash-thesis-db?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: lyvuthesis@
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 5
+  application:
+    name: core
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    serialization:
+      write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  profiles:
+    active: dev
+
+
 

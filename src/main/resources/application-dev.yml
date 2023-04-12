@@ -1,0 +1,27 @@
+security:
+  jwt:
+    secret: +ObyqB57MMZtDJ0mXD2I4ZcXgbXaZvNeSzDkBPtzZo4uJ15RQ3toIHsB2YrPwVFx
+    secret_kid: KXuTXedbTwvPAN58KGqUg
+    legacy_secret: +ObyqB57MMZtDJ0mXD2I4ZcXgbXaZvNeSzDkBPtzZo4uJ15RQ3toIHsB2YrPwVFx
+    legacy_secret_kid: KXuTXedbTwvPAN58KGqUg
+    expire-time: 900000  # in second
+    exchange-token-expire-time: 900000  # in second
+  #encoding-strength: 256
+  security-realm: Ecowash identify
+spring:
+  #Spring data source mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecowash-thesis-db?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: lyvuthesis@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+#logging:
+#  path: '/home/ubuntu/apps/core/logs'
