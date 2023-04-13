@@ -19,6 +19,7 @@ import vuly.thesis.ecowash.core.payload.request.*;
 import vuly.thesis.ecowash.core.repository.*;
 import vuly.thesis.ecowash.core.repository.jdbc.DAO.GetDeliveryCodeDAO;
 import vuly.thesis.ecowash.core.repository.jdbc.DAO.ReceivedReceiptDtoDAO;
+import vuly.thesis.ecowash.core.security.SecurityService;
 import vuly.thesis.ecowash.core.service.mail.MailService;
 import vuly.thesis.ecowash.core.util.DateTimeUtil;
 import vuly.thesis.ecowash.core.util.EbstUserRequest;
@@ -353,7 +354,7 @@ public class ReceivedReceiptService {
                 && !"{}".equals(receivedReceipt.getSignatureStaff())
                 && !"{}".equals(receivedReceipt.getSignatureCustomer())
         ) {
-            List<String> emails = staffRepository.findByTenantIdAndCustomerIdAAndIsCustomer(receivedReceipt.getCustomer().getId(), true);
+            List<String> emails = staffRepository.findByCustomerIdAndIsCustomer(receivedReceipt.getCustomer().getId(), true);
             if (emails.isEmpty()) {
                 return;
             }

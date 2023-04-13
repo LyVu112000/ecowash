@@ -51,6 +51,8 @@ public class StaffService {
 	CustomerAccountMapper customerAccountMapper;
 	@Autowired
 	CustomerRepository customerRepository;
+	@Autowired
+	UserService userService;
 
 	public Staff create(StaffCreateRequest request) {
 		String validationResult = staffValidation.checkExistedStaff(request.getEmail(), request.getCode(), request.getUsername());

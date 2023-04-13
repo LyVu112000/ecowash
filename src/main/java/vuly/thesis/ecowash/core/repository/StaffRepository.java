@@ -22,14 +22,14 @@ public class StaffRepository extends BaseRepository<Staff,Long, IStaffRepository
     }
 
     public Optional<Staff> findByIdAndExistedSignature(long id, String signature) {
-        return repository.findByIdAndSignatureAndTenantId(id, signature);
+        return repository.findByIdAndSignature(id, signature);
     }
 
-    public List<String> findByTenantIdAndCustomerIdAAndIsCustomer(Long customerId, Boolean isCustomer) {
-        return repository.findByTenantIdAndCustomerIdAAndIsCustomer(customerId, isCustomer);
+    public List<String> findByCustomerIdAndIsCustomer(Long customerId, Boolean isCustomer) {
+        return repository.findByCustomerIdAndIsCustomer(customerId, isCustomer);
     }
 
     public Optional<Staff> findByIdAndActive(long id) {
-        return repository.findByIdAndStatusAndTenantId(id, Status.ACTIVE);
+        return repository.findByIdAndStatus(id, Status.ACTIVE);
     }
 }

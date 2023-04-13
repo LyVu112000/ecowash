@@ -30,8 +30,8 @@ public interface IDeliveryReceiptRepository extends BaseJpaRepository<DeliveryRe
     List<ReceiptByDay> getTotalReceiptByMonthAndYear(int month, int year );
 
     @Query(value = "select COALESCE(SUM(number_delivery_actual),0) - t1.number_received " +
-            "            from (select received_receipt_id, product_item_id, tenant_id, SUM(number_received) as number_received from item_received " +
-            "            group by received_receipt_id, product_item_id, tenant_id) t1 " +
+            "            from (select received_receipt_id, product_item_id , SUM(number_received) as number_received from item_received " +
+            "            group by received_receipt_id, product_item_id ) t1 " +
             "            left join item_delivery t2 on t1.product_item_id = t2.product_item_id " +
             "            where t1.received_receipt_id = :receiptId and t2.received_receipt_id = :receiptId and t1.product_item_id = :productItemId " +
             "            and t2.delivery_receipt_id in (select id from delivery_receipt where status = 'DONE') " +

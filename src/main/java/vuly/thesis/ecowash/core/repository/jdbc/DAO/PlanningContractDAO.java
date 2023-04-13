@@ -19,7 +19,7 @@ public class PlanningContractDAO {
     public List<PlanningContractDto> findByPlanningId(Long planningId) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-        String queryBuilder = "SELECT plc.id, plc.tenant_id, plc.time_received, plc.time_delivery, plc.washing_team, plc.bag_number, plc.note, " +
+        String queryBuilder = "SELECT plc.id, plc.time_received, plc.time_delivery, plc.washing_team, plc.bag_number, plc.note, " +
                 "ct.id AS contract_id, ct.code AS contract_code, " +
                 "cus.id AS customer_id, cus.code AS customer_code, cus.full_name AS customer_full_name, " +
                 "pt.id AS product_type_id, pt.name AS product_type_name, pt.value AS product_type_value " +

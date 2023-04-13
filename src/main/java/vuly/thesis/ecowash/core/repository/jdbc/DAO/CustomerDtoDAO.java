@@ -27,7 +27,7 @@ public class CustomerDtoDAO {
 
     public Page<CustomerDto> findAll(CustomerSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT c.id, c.code, c.full_name, c.email, c.address, c.tenant_id, c.date_created, c.active  " +
+        String queryBuilder = "SELECT c.id, c.code, c.full_name, c.email, c.address, c.date_created, c.active  " +
                 "FROM customer c " +
                 condition(request, namedParameters) +
                 " ORDER BY " + orders(pageable) +

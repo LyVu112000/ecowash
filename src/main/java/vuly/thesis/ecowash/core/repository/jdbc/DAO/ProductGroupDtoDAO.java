@@ -27,7 +27,7 @@ public class ProductGroupDtoDAO {
 
     public Page<ProductGroupDto> findAll(ProductGroupSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT pr.id, pr.code, pr.name, pr.note, pr.tenant_id, pr.active, " +
+        String queryBuilder = "SELECT pr.id, pr.code, pr.name, pr.note, pr.active, " +
                 "pr.date_created, prt.name as product_type_name " +
                 "FROM product_group pr " +
                 "LEFT JOIN piece_type pt ON pt.id = pr.piece_type_id " +

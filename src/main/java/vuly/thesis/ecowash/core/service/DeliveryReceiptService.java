@@ -31,7 +31,6 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -624,7 +623,6 @@ public class DeliveryReceiptService {
             List<ItemDeliveryDto> itemDeliveryDtoList = itemDeliveryDtoDAO.findByDeliveryReceiptId(deliveryReceipt.getId(), request.getProductItemName());
             BriefDeliveryReceiptDto briefDeliveryReceiptDto = new BriefDeliveryReceiptDto();
             briefDeliveryReceiptDto.setId(deliveryReceipt.getId());
-            briefDeliveryReceiptDto.setTenantId(deliveryReceipt.getTenantId());
             briefDeliveryReceiptDto.setCode(deliveryReceipt.getCode());
             briefDeliveryReceiptDto.setItemDeliveryList(itemDeliveryDtoList);
             briefDeliveryReceiptDto.setCustomerId(deliveryReceipt.getCustomerId());
@@ -654,7 +652,7 @@ public class DeliveryReceiptService {
                 && !"{}".equals(deliveryReceipt.getSignatureStaff())
                 && !"{}".equals(deliveryReceipt.getSignatureCustomer())
         ) {
-            List<String> emails = staffRepository.findByTenantIdAndCustomerIdAAndIsCustomer(deliveryReceipt.getCustomer().getId(), true);
+            List<String> emails = staffRepository.findByCustomerIdAndIsCustomer(deliveryReceipt.getCustomer().getId(), true);
             if (emails.isEmpty()) {
                 return;
             }

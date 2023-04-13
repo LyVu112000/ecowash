@@ -1,12 +1,21 @@
 server:
   port: 8080
   servlet:
-    context-path: /core
+    context-path: /api
   max-http-header-size: 20000
-
 spring:
-  application:
-    name: core
+  datasource:
+    url: jdbc:mysql://localhost:3308/ecowash-thesis-db
+    username: root
+    password: lyvuthesis@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+  #    open-in-view: false
   jackson:
     date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
     serialization:
@@ -17,8 +26,23 @@ spring:
       max-request-size: 10MB
   mvc:
     throw-exception-if-no-handler-found: true
-  profiles:
-    active: dev
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: vuly.thesis@gmail.com
+    password: oixxgwffclltifel
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
 
-
-
+eco-wash:
+  app:
+    jwt-secret: thesis
+    jwt-duration: 900000 # 15 minutes
+    jwt-refresh-duration: 604800000 # 7 days

@@ -28,7 +28,7 @@ public class CustomerAccountDAO {
 
     public Page<StaffDto> findAll(StaffSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT s.id, s.code, s.full_name, s.email, s.tenant_id, s.username, s.date_created, s.role, " +
+        String queryBuilder = "SELECT s.id, s.code, s.full_name, s.email, s.username, s.date_created, s.role, " +
                 "s.status, s.phone_number, c.full_name as customer_name, d.name as department_name " +
                 "FROM staff s " +
                 "LEFT JOIN customer c ON c.id = s.customer_id " +

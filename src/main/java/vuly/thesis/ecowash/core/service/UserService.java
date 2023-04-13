@@ -16,18 +16,18 @@ import vuly.thesis.ecowash.core.entity.User;
 import vuly.thesis.ecowash.core.entity.UserRefreshToken;
 import vuly.thesis.ecowash.core.exception.AppException;
 import vuly.thesis.ecowash.core.payload.request.LoginRequest;
+import vuly.thesis.ecowash.core.payload.request.RefreshTokenRequest;
 import vuly.thesis.ecowash.core.payload.request.UserRequest;
 import vuly.thesis.ecowash.core.payload.request.UserUpdateRequest;
 import vuly.thesis.ecowash.core.payload.response.LoginResponse;
+import vuly.thesis.ecowash.core.payload.response.RefreshTokenResponse;
 import vuly.thesis.ecowash.core.repository.core.RoleRepository;
 import vuly.thesis.ecowash.core.repository.core.UserRefreshTokenRepository;
 import vuly.thesis.ecowash.core.repository.core.UserRepository;
-import vuly.thesis.ecowash.core.security.JwtTokenProvider;
+import vuly.thesis.ecowash.core.security.JwtProvider;
 import vuly.thesis.ecowash.core.validation.UserValidation;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -45,7 +45,7 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
-	private JwtTokenProvider tokenProvider;
+	private JwtProvider tokenProvider;
 	@Autowired
 	private UserRefreshTokenRepository userRefreshTokenRepository;
 
@@ -58,18 +58,38 @@ public class UserService {
 		);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = findByUsername(loginRequest.getUsername());
-		UserRefreshToken userRefreshToken = createRefreshToken(user);
-		String accessToken = tokenProvider.generateToken(user, userRefreshToken.getJti());
-		String exchangeToken = tokenProvider.generateExchangeToken(user.getId());
-		List<String> roleName = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-		String role = String.join(",", roleName);
-		return new LoginResponse(accessToken,userRefreshToken.getToken(), exchangeToken, user, role);
+		String accessToken = tokenProvider.generateJwtToken(loginRequest.getUsername());
+		String refreshToken = tokenProvider.generateJwtRefreshToken(loginRequest.getUsername());
+		if(user.getRefreshToken() != null) {
+			UserRefreshToken refreshTokenEntity = user.getRefreshToken();
+			refreshTokenEntity.setToken(refreshToken);
+			refreshTokenEntity.setExpiryDate(tokenProvider.getExpirationDate(refreshToken));
+		} else {
+			UserRefreshToken refreshTokenEntity = UserRefreshToken.builder()
+					.token(refreshToken)
+					.expiryDate(tokenProvider.getExpirationDate(refreshToken))
+					.build();
+			user.addRefreshToken(refreshTokenEntity);
+		}
+		return new LoginResponse().toBuilder()
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.username(user.getUsername())
+				.role(user.getRole().getName())
+				.build();
 	}
 
 
-	private UserRefreshToken createRefreshToken(User user) {
-		String token = RandomStringUtils.randomAlphanumeric(128);
-		return userRefreshTokenRepository.save(new UserRefreshToken(token, user));
+	public RefreshTokenResponse getNewToken(RefreshTokenRequest request) {
+		UserRefreshToken refreshTokenEntity = userRefreshTokenRepository.findByToken(request.getRefreshToken()).orElseThrow(() -> new RuntimeException());
+		User user = refreshTokenEntity.getUser();
+		if (tokenProvider.isTokenExpired(refreshTokenEntity.getToken())) {
+			refreshTokenEntity.setToken(tokenProvider.generateJwtRefreshToken(user.getEmail()));
+			userRefreshTokenRepository.save(refreshTokenEntity);
+		}
+		return new RefreshTokenResponse().toBuilder()
+				.accessToken(tokenProvider.generateJwtToken(user.getEmail()))
+				.build();
 	}
 
 	@Transactional
@@ -85,19 +105,9 @@ public class UserService {
 	}
 
     public User registerNewUserAccount(UserRequest request){
-		Set<Role> roles = new HashSet<>();
-		if (request.getRoles() != null) {
-			String[] rolesArray = request.getRoles().split(",");
-
-			Stream.of(rolesArray).forEach(role -> {
-				if (!"ROLE_ADMIN".equalsIgnoreCase(role)) {
-					roles.add(roleRepository.findByName(role));
-				}
-			});
-		}
 		User user = User
                 .builder()
-                .roles(roles)
+				.role(roleRepository.findByName(request.getRoles()).orElseThrow(() -> new AppException(4041)))
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
@@ -135,16 +145,7 @@ public class UserService {
 		Optional<User> userOptional = userRepository.findByUsername(request.getUsername());
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
-			Set<Role> roles = new HashSet<>();
-			if (request.getRoles() != null) {
-				String[] rolesArray = request.getRoles().split(",");
-
-				Stream.of(rolesArray).forEach(roleName -> {
-					Role role = roleRepository.findByName(roleName);
-					roles.add(role);
-				});
-			}
-			user.setRoles(roles);
+			user.setRole(roleRepository.findByName(request.getRoles()).orElseThrow(() -> new AppException(4041)));
 			user.setFullName(request.getFullName());
 			user.setEmail(request.getEmail());
 			user.setPhoneNumber(request.getPhoneNumber());

@@ -16,8 +16,7 @@ import java.util.List;
 @RequestMapping("/debt")
 @RequiredArgsConstructor
 public class DebtSettlementController {
-    @Autowired
-    DebtSettlementService debtSettlementService;
+    private final DebtSettlementService debtSettlementService;
     @GetMapping("/finalDebt")
     public ResponseEntity<?> getFinalDebt(DebtSearchRequest request) {
         List<DebtDetailDto> result = debtSettlementService.getFinalDebt(request);

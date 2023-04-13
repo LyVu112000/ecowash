@@ -1,6 +1,7 @@
 package vuly.thesis.ecowash.core.payload.response;
 
 import lombok.*;
+import vuly.thesis.ecowash.core.util.MessageSourceUtil;
 
 @Getter
 @Setter

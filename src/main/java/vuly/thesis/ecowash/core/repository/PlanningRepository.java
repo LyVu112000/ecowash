@@ -16,6 +16,6 @@ public class PlanningRepository extends BaseRepository<Planning, Long, IPlanning
     }
 
     public Optional<Integer> findMaxSequenceNumber() {
-        return repository.findMaxSequenceNumberByTenantId();
+        return repository.findMaxSequenceNumber();
     }
 }

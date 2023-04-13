@@ -17,7 +17,6 @@ public abstract class BaseRepository<T, K extends Serializable, R extends BaseJp
 	}
 
 	public Optional<T> findById(K id) {
-		// FIXME: BY PASS BY JOB (JOB dont have specific tenantID)
 		return repository.findById(id);
 	}
 

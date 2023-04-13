@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import vuly.thesis.ecowash.core.entity.Role;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,7 +13,7 @@ import java.util.Optional;
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
 
-	Role findByName(String name);
+	Optional<Role> findByName(String name);
 
 	@Override
 	void delete(Role role);

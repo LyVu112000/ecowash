@@ -53,8 +53,6 @@ public class DebtSettlementService {
                         ParameterMode.IN)
                 .registerStoredProcedureParameter("received_receipt_id", String.class,
                         ParameterMode.IN)
-                .registerStoredProcedureParameter("tenantId", Long.class,
-                        ParameterMode.IN)
                 .setParameter("customerId", request.getCustomerId())
                 .setParameter("from_date", DateTimeUtil.convertToUTC(request.getFromDate(), ebstUserRequest))
                 .setParameter("to_date", DateTimeUtil.convertToUTC(request.getToDate(), ebstUserRequest))

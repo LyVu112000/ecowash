@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import vuly.thesis.ecowash.core.entity.User;
 import vuly.thesis.ecowash.core.exception.AppException;
 import vuly.thesis.ecowash.core.payload.request.UpdatePasswordRequest;
-import vuly.thesis.ecowash.core.payload.request.UserLogoutRequest;
 import vuly.thesis.ecowash.core.payload.request.UserRequest;
 import vuly.thesis.ecowash.core.payload.request.UserUpdateRequest;
 import vuly.thesis.ecowash.core.payload.response.AppResponse;

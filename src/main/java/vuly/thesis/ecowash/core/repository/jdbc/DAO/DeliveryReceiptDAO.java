@@ -164,7 +164,7 @@ public class DeliveryReceiptDAO {
     public DeliveryReceiptDto findById(Long id) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-        String queryBuilder = "SELECT dr.id, dr.tenant_id, dr.code, dr.delivery_date, dr.bag_number, dr.number_of_loose_bags, " +
+        String queryBuilder = "SELECT dr.id, dr.code, dr.delivery_date, dr.bag_number, dr.number_of_loose_bags, " +
                 "dr.weight, dr.number_room, dr.staff_check, dr.check_date, dr.note, dr.customer_id, dr.status, pt.value, dr.is_express " +
                 "FROM delivery_receipt dr " +
                 "LEFT JOIN product_type pt ON pt.id = dr.product_type_id " +

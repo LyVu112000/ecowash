@@ -20,7 +20,7 @@ public class BriefDeliveryReceiptDtoDAO {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     public List<BriefDeliveryReceiptDto> getBriefReceiptList(BriefDeliveryReceiptSearchRequest request) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT dr.id, dr.code, dr.customer_id, dr.tenant_id, pt.value as product_type_value, dr.status " +
+        String queryBuilder = "SELECT dr.id, dr.code, dr.customer_id, pt.value as product_type_value, dr.status " +
                 "FROM core.delivery_receipt dr " +
                 "LEFT JOIN product_type pt ON pt.id = dr.product_type_id " +
                 condition(request, namedParameters) +

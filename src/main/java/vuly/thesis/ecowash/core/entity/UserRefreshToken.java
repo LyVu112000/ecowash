@@ -1,32 +1,31 @@
 package vuly.thesis.ecowash.core.entity;
 
-import lombok.Data;
+import lombok.*;
 
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
-@Data
 @Entity
-@Table(name = "user_refresh_token")
-public class UserRefreshToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
+public class UserRefreshToken extends JpaEntity {
 
-    @Column(nullable = false)
+    @NotBlank
+//    @Column(nullable = false, unique = true)
     private String token;
 
-    @Column
-    private String jti;
+    @NonNull
+//    @Column(nullable = false)
+    private LocalDateTime expiryDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    private Boolean active;
+
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
-    public UserRefreshToken() {
-    }
-
-    public UserRefreshToken(String token, User user) {
-        this.token = token;
-        this.user = user;
-        this.jti = UUID.randomUUID().toString();
-    }
 }

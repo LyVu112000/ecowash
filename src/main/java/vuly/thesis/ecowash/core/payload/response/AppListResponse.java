@@ -1,8 +1,8 @@
 package vuly.thesis.ecowash.core.payload.response;
 
 
-import ebst.ecowash.core.util.MessageSourceUtil;
 import lombok.*;
+import vuly.thesis.ecowash.core.util.MessageSourceUtil;
 
 import java.util.List;
 

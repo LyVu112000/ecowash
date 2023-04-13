@@ -29,11 +29,7 @@ public class SpecialInstructionService {
         }
     }
 
-    public List<String> findByTenantIdAndValueIn(String values) {
-        return specialInstructionRepository.findByValueIn(List.of(values.replace("\"", "").split(",")));
-    }
-
-    public List<String> findNameByTenantIdAndValueIn(List<Long> ids) {
+    public List<String> findNameByValueIn(List<Long> ids) {
         return specialInstructionRepository.findByIdIn(ids);
     }
 }

@@ -26,7 +26,7 @@ public class ProductItemBriefDAO {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     public Page<ProductItemDto> findAll(ProductItemSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT pi.id, pi.code, pi.name, pi.tenant_id, pi.note, prt.value as product_type_value, pi.active, " +
+        String queryBuilder = "SELECT pi.id, pi.code, pi.name, pi.note, prt.value as product_type_value, pi.active, " +
                 "pi.date_created, prt.name as product_type_name, pr.name as product_group_name, pt.name as piece_type_name, pt.value as piece_type_value " +
                 "FROM product_item pi " +
                 "LEFT JOIN piece_type pt ON pt.id = pi.piece_type_id " +

@@ -1,20 +1,11 @@
 package vuly.thesis.ecowash.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.management.relation.RoleStatus;
+import lombok.*;
 import javax.persistence.*;
-import java.security.Permission;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "role", uniqueConstraints = {@UniqueConstraint(columnNames = {"name","tenant_id"}), @UniqueConstraint(columnNames = {"label","tenant_id"}) })
+@Table(name = "role")
 @Data
 @Builder
 @AllArgsConstructor
@@ -26,9 +17,5 @@ public class Role extends JpaEntity {
 
     @Column(name = "label", length = 200)
     private String label;
-
-
-    @ManyToMany(mappedBy = "roles")
-    Set<User> users;
 
 }

@@ -16,10 +16,10 @@ public interface IStaffRepository extends BaseJpaRepository<Staff,Long>, JpaSpec
     @Query(value = "SELECT * FROM staff s WHERE ((s.email = :email OR s.code = :code)  AND s.deleted = false) OR (s.username = :username AND s.) ORDER BY s.id DESC LIMIT 1", nativeQuery = true)
     Optional<Staff> findDuplicatedData(@Param("email") String email, @Param("code") String staffCode, @Param("username") String username );
 
-    Optional<Staff> findByIdAndSignatureAndTenantId(long id, String signature);
+    Optional<Staff> findByIdAndSignature(long id, String signature);
 
     @Query("SELECT s.email FROM Staff s WHERE s.customerId = :customerId AND s.isCustomer = :isCustomer")
-    List<String> findByTenantIdAndCustomerIdAAndIsCustomer(Long customerId, Boolean isCustomer);
+    List<String> findByCustomerIdAndIsCustomer(Long customerId, Boolean isCustomer);
 
-    Optional<Staff> findByIdAndStatusAndTenantId(Long id, Status status);
+    Optional<Staff> findByIdAndStatus(Long id, Status status);
 }

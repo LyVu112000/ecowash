@@ -28,7 +28,7 @@ public class PlanningDAO {
     public Page<PlanningDto> findAll(PlanningSearchRequest request, Pageable pageable) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-        String queryBuilder = "SELECT DISTINCT pl.id, pl.tenant_id, pl.date_created, pl.created_by, pl.code, pl.name, pl.from_date, pl.to_date, pl.status " +
+        String queryBuilder = "SELECT DISTINCT pl.id, pl.date_created, pl.created_by, pl.code, pl.name, pl.from_date, pl.to_date, pl.status " +
                 "FROM planning pl " +
                 "LEFT JOIN planning_contract plc ON plc.planning_id = pl.id " +
                 "LEFT JOIN contract ct ON ct.id = plc.contract_id " +
@@ -101,7 +101,7 @@ public class PlanningDAO {
     public PlanningDto findById(Long id) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
-        String queryBuilder = "SELECT DISTINCT pl.id, pl.tenant_id, pl.date_created, pl.created_by, pl.code, " +
+        String queryBuilder = "SELECT DISTINCT pl.id, pl.date_created, pl.created_by, pl.code, " +
                 "pl.name, pl.from_date, pl.to_date, pl.status " +
                 "FROM planning pl " +
                 "WHERE pl.id = :id";

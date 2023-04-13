@@ -20,7 +20,6 @@ import java.time.Instant;
 public abstract class BaseDto {
 
     private Long id;
-    private Long tenantId;
     private Instant dateCreated;
     private Instant lastUpdated;
     private String modifiedBy;

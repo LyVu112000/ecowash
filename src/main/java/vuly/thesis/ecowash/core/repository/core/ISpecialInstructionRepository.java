@@ -20,9 +20,9 @@ public interface ISpecialInstructionRepository extends BaseJpaRepository<Special
             "LEFT JOIN delivery_receipt dr ON dr.id = sir.delivery_receipt_id WHERE dr.id = :deliveryReceiptId", nativeQuery = true)
     List<String> findByDeliveryReceiptId (@Param("deliveryReceiptId") long deliveryReceiptId);
 
-    @Query("SELECT name FROM SpecialInstruction WHERE tenantId = ?1 AND value IN (?2)")
+    @Query("SELECT name FROM SpecialInstruction WHERE value IN (?2)")
     List<String> findByValueIn(List<String> values);
 
-    @Query("SELECT name FROM SpecialInstruction WHERE tenantId = ?1 AND id IN (?2)")
+    @Query("SELECT name FROM SpecialInstruction WHERE id IN (?2)")
     List<String> findByIdIn(List<Long> ids);
 }

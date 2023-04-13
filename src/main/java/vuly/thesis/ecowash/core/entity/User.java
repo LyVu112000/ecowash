@@ -2,7 +2,6 @@ package vuly.thesis.ecowash.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.jboss.aerogear.security.otp.api.Base32;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -22,6 +21,8 @@ public class User extends JpaEntity {
 
 	@Column(name = "username", length = 50, nullable = false)
 	private String username;
+
+
 	@Column(name = "email", length = 100, nullable = false)
 	private String email;
 
@@ -40,17 +41,14 @@ public class User extends JpaEntity {
 
 	@Column(name = "customer_id")
 	private Long customerId;
-	@Column(name = "is_using_2fa")
-	private boolean isUsing2FA;
 
-	@Column(name = "secret", length = 255)
-	private String secret;
+	@ManyToOne
+	private Role role;
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private UserRefreshToken refreshToken;
 
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinTable(name = "user_role",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	@JsonIgnore
-	private Set<Role> roles = new HashSet<>();
-
+	public void addRefreshToken(UserRefreshToken refreshToken) {
+		this.refreshToken = refreshToken;
+		refreshToken.setUser(this);
+	}
 }

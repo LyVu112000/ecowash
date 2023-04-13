@@ -22,7 +22,6 @@ public class MessageSourceUtil {
 	public static String getInfoMessage(int code, List<Object> params) {
 		Locale locale = LocaleContextHolder.getLocale();
 		String infoMsg;
-
 		if (params != null) {
 			infoMsg = staticInfoMessageSource.getMessage(
 					Common.KEY_INFO_MESSAGE + code,
@@ -62,6 +61,7 @@ public class MessageSourceUtil {
 		staticErrorMessageSource = errorMessageSource;
 		staticInfoMessageSource = infoMessageSource;
 	}
+
 
 	@Autowired
 	public void setErrorMessageSource(ResourceBundleMessageSource errorMessageSource) {

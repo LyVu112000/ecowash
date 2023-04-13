@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vuly.thesis.ecowash.core.payload.request.LoginRequest;
-import vuly.thesis.ecowash.core.payload.request.UserLogoutRequest;
-import vuly.thesis.ecowash.core.payload.response.AppResponse;
+import vuly.thesis.ecowash.core.payload.request.RefreshTokenRequest;
 import vuly.thesis.ecowash.core.payload.response.LoginResponse;
-import vuly.thesis.ecowash.core.security.JwtTokenProvider;
+import vuly.thesis.ecowash.core.payload.response.RefreshTokenResponse;
 import vuly.thesis.ecowash.core.service.UserService;
+
+import javax.validation.Valid;
 
 @RestController
 @Slf4j
@@ -25,11 +26,17 @@ public class AuthController {
 		return ResponseEntity.ok(result);
 	}
 
-	@PostMapping("/logout")
-	public ResponseEntity<?> logout(@RequestBody UserLogoutRequest request) {
-		log.info("Internal request logout user");
-		userService.logout(request.getUserId());
-		log.info("Internal request logout user success");
-		return ResponseEntity.ok(AppResponse.success("Success"));
+//	@PostMapping("/logout")
+//	public ResponseEntity<?> logout(@RequestBody UserLogoutRequest request) {
+//		log.info("Internal request logout user");
+//		userService.logout(request.getUserId());
+//		log.info("Internal request logout user success");
+//		return ResponseEntity.ok(AppResponse.success("Success"));
+//	}
+
+	@PostMapping("/token/refresh")
+	public ResponseEntity<?> getNewToken(@RequestBody @Valid RefreshTokenRequest request) {
+		RefreshTokenResponse response = userService.getNewToken(request);
+		return ResponseEntity.ok(response);
 	}
 }

@@ -74,8 +74,6 @@ public class ReportServiceV2 {
                         ParameterMode.IN)
                 .registerStoredProcedureParameter("init_date", Instant.class,
                         ParameterMode.IN)
-                .registerStoredProcedureParameter("tenantId", Long.class,
-                        ParameterMode.IN)
                 .setParameter("customerId", request.getCustomerId())
                 .setParameter("from_date", DateTimeUtil.convertToUTC(request.getFromDate(), ebstUserRequest))
                 .setParameter("to_date", DateTimeUtil.convertToUTC(request.getToDate(), ebstUserRequest))
@@ -164,8 +162,6 @@ public class ReportServiceV2 {
                 .registerStoredProcedureParameter("laundry_form_value", String.class,
                         ParameterMode.IN)
                 .registerStoredProcedureParameter("product_type_id", Long.class,
-                        ParameterMode.IN)
-                .registerStoredProcedureParameter("tenantId", Long.class,
                         ParameterMode.IN)
                 .registerStoredProcedureParameter("is_rewash", Boolean.class,
                         ParameterMode.IN)
@@ -314,7 +310,7 @@ public class ReportServiceV2 {
         String specialInstructions = "";
         if (!StringUtil.isEmpty(request.getSpecialInstructions())) {
             List<Long> specialInstructionIds = Arrays.stream(request.getSpecialInstructions().split(",")).map(Long::valueOf).collect(Collectors.toList());
-            specialInstructions = specialInstructionService.findNameByTenantIdAndValueIn(specialInstructionIds).stream().collect(Collectors.joining(", "));
+            specialInstructions = specialInstructionService.findNameByValueIn(specialInstructionIds).stream().collect(Collectors.joining(", "));
         }
 
         return reportGenerator.generateGeneralReportXlsxFile(customer.getFullName(), request.getProductType(),
@@ -333,7 +329,7 @@ public class ReportServiceV2 {
         String specialInstructions = "";
         if (!StringUtil.isEmpty(request.getSpecialInstructions())) {
             List<Long> specialInstructionIds = Arrays.stream(request.getSpecialInstructions().split(",")).map(Long::valueOf).collect(Collectors.toList());
-            specialInstructions = specialInstructionService.findNameByTenantIdAndValueIn(specialInstructionIds).stream().collect(Collectors.joining(", "));
+            specialInstructions = specialInstructionService.findNameByValueIn(specialInstructionIds).stream().collect(Collectors.joining(", "));
         }
 
         List<ReportDetailDtoV2> reportDetailDtoV2List = this.getReceiptDetailReportV2(request).getData();

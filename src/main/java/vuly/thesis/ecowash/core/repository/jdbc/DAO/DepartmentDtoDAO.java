@@ -26,7 +26,7 @@ public class DepartmentDtoDAO {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     public Page<DepartmentDto> findAll(DepartmentSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT d.id, d.code, d.name, d.note, d.active, d.tenant_id, d.phone_number, " +
+        String queryBuilder = "SELECT d.id, d.code, d.name, d.note, d.active, d.phone_number, " +
                 "(select count(s.id) from staff s where s.department_id = d.id) as total_staff " +
                 "FROM department d " +
                 condition(request, namedParameters) +

@@ -27,7 +27,7 @@ public class TruckDtoDAO {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     public Page<TruckDto> findAll(TruckSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT t.id, t.code, t.tenant_id, t.date_created, t.status,  " +
+        String queryBuilder = "SELECT t.id, t.code, t.date_created, t.status,  " +
                 " s.code as staff_code, s.full_name as staff_full_name, s.id as staff_id  " +
                 "FROM truck t " +
                 "LEFT JOIN staff s ON s.id = t.staff_id " +

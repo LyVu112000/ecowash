@@ -31,7 +31,7 @@ public class ContractDtoDAO {
 
     public Page<ContractDto> findAll(ContractSearchRequest request, Pageable pageable) {
         Map<String, Object> namedParameters = new HashMap<>();
-        String queryBuilder = "SELECT c.id, c.code, c.tenant_id, c.date_created, c.valid_date, c.expired_date, " +
+        String queryBuilder = "SELECT c.id, c.code, c.date_created, c.valid_date, c.expired_date, " +
                 "c.created_by, c.status, ct.full_name as customer_name, c.customer_id " +
                 "FROM contract c " +
                 "LEFT JOIN customer ct ON ct.id = c.customer_id " +
