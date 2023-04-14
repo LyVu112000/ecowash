@@ -1,11 +1,12 @@
 package vuly.thesis.ecowash.core.payload.request;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+@Builder(toBuilder=true)
 @Data
 public class UserUpdateRequest {
 	@NotBlank

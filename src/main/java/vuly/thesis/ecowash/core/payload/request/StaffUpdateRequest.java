@@ -12,7 +12,7 @@ public class StaffUpdateRequest {
 
 	@Size(max = 50)
 	private String fullName;
-	private List<Long> customerId;
+	private Long customerId;
 	private long departmentId;
 	@Email
 	@Size(min = 5, max = 50)

@@ -31,6 +31,9 @@ public class Staff extends JpaEntity {
     @Column(name = "username",  nullable = false)
     private String username;
 
+    @Column(name = "password",  nullable = false)
+    private String password;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
@@ -69,8 +72,5 @@ public class Staff extends JpaEntity {
 
     @Column(name = "note")
     private String note;
-
-    @OneToMany(mappedBy="fieldStaff",  cascade = {CascadeType.ALL}, orphanRemoval = true)
-    List<FieldStaffLinkCustomer> fieldStaffLinkCustomers = new ArrayList<>();
 }
 

@@ -1,6 +1,5 @@
 package vuly.thesis.ecowash.core.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vuly.thesis.ecowash.core.entity.FieldStaffLinkCustomer;
 import vuly.thesis.ecowash.core.entity.Staff;
 import vuly.thesis.ecowash.core.entity.type.Status;
 import vuly.thesis.ecowash.core.exception.AppException;
 import vuly.thesis.ecowash.core.mapper.CustomerAccountMapper;
 import vuly.thesis.ecowash.core.payload.dto.StaffDto;
-import vuly.thesis.ecowash.core.payload.request.StaffCreateRequest;
-import vuly.thesis.ecowash.core.payload.request.StaffSearchRequest;
-import vuly.thesis.ecowash.core.payload.request.StaffUpdatePasswordRequest;
-import vuly.thesis.ecowash.core.payload.request.StaffUpdateRequest;
+import vuly.thesis.ecowash.core.payload.request.*;
 import vuly.thesis.ecowash.core.repository.CustomerRepository;
 import vuly.thesis.ecowash.core.repository.StaffRepository;
 import vuly.thesis.ecowash.core.repository.jdbc.DAO.CustomerAccountDAO;
@@ -28,7 +23,6 @@ import vuly.thesis.ecowash.core.validation.StaffValidation;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -57,25 +51,29 @@ public class StaffService {
 	public Staff create(StaffCreateRequest request) {
 		String validationResult = staffValidation.checkExistedStaff(request.getEmail(), request.getCode(), request.getUsername());
 		if (validationResult != null) {
-			List<Object> params = new ArrayList();
+			List<Object> params = new ArrayList<>();
 			params.add(validationResult);
 			throw new AppException(HttpStatus.BAD_REQUEST, 4018, params);
 		}
 
 		Staff newStaff = createNewStaffFromRequest(request);
-		List<FieldStaffLinkCustomer> fieldStaffLinkCustomerList = new ArrayList<>();
-		if (request.getRoles().contains("FIELD_STAFF")) {
-			for (long id : request.getCustomerId()) {
-				FieldStaffLinkCustomer fieldStaffLinkCustomerBuilder = FieldStaffLinkCustomer.builder()
-						.fieldStaff(newStaff)
-						.customer(customerRepository.findByIdAndActiveIsTrue(id))
-						.build();
-				fieldStaffLinkCustomerList.add(fieldStaffLinkCustomerBuilder);
-			}
-		}
-		newStaff.getFieldStaffLinkCustomers().addAll(fieldStaffLinkCustomerList);
 		Staff staff = staffRepository.save(newStaff);
+		userService.register(setUserRequest(staff));
 		return staffRepository.save(staff);
+	}
+
+	public UserRequest setUserRequest(Staff staff) {
+		UserRequest userRequest = new UserRequest();
+		userRequest.setUsername(staff.getUsername());
+		userRequest.setFullName(staff.getFullName());
+		userRequest.setPassword(staff.getPassword());
+		userRequest.setPhoneNumber(staff.getPhoneNumber());
+		userRequest.setEmail(staff.getEmail());
+		userRequest.setRoles(staff.getRole());
+		userRequest.setStaffId(staff.getId());
+		userRequest.setCustomerId(staff.getCustomerId());
+		userRequest.setIsCustomer(staff.getIsCustomer());
+		return userRequest;
 	}
 
 
@@ -89,8 +87,7 @@ public class StaffService {
 				.phoneNumber(request.getPhoneNumber())
 				.role(request.getRoles())
 				.note(request.getNote())
-				.status(Status.ACTIVE)
-				.fieldStaffLinkCustomers(new ArrayList<>());
+				.status(Status.ACTIVE);
 		if(request.getDepartmentId() > 0){
 			staffValidation.validDepartment(request.getDepartmentId());
 			staffBuilder.department(departmentService.getDepartmentById(request.getDepartmentId()));
@@ -98,8 +95,8 @@ public class StaffService {
 
 		if(request.getIsCustomer() != null && request.getRoles().contains("ROLE_CUSTOMER")){
 			staffBuilder.isCustomer(request.getIsCustomer());
-			staffValidation.validCustomer(request.getCustomerId().get(0));
-			staffBuilder.customerId(request.getCustomerId().get(0));
+			staffValidation.validCustomer(request.getCustomerId());
+			staffBuilder.customerId(request.getCustomerId());
 		} else {
 			staffBuilder.isCustomer(false);
 		}
@@ -122,19 +119,13 @@ public class StaffService {
 			} else {
 				updateStaff.setDepartment(null);
 			}
-
-			List<FieldStaffLinkCustomer> fieldStaffLinkCustomerList = new ArrayList<>();
-			if (updateStaff.getRole().contains("FIELD_STAFF")) {
-				for (long id : request.getCustomerId()) {
-					FieldStaffLinkCustomer fieldStaffLinkCustomerBuilder = FieldStaffLinkCustomer.builder()
-							.fieldStaff(updateStaff)
-							.customer(customerRepository.findByIdAndActiveIsTrue(id))
-							.build();
-					fieldStaffLinkCustomerList.add(fieldStaffLinkCustomerBuilder);
-				}
-			}
-			updateStaff.getFieldStaffLinkCustomers().clear();
-			updateStaff.getFieldStaffLinkCustomers().addAll(fieldStaffLinkCustomerList);
+			UserUpdateRequest.UserUpdateRequestBuilder userUpdateRequestBuilder = UserUpdateRequest.builder()
+					.roles(request.getRoles())
+					.fullName(request.getFullName())
+					.email(request.getEmail())
+					.phoneNumber(request.getPhoneNumber())
+					.customerId(request.getCustomerId());
+			userService.updateUserStaff(userUpdateRequestBuilder.build());
 			return staffRepository.save(updateStaff);
 		} else {
 			throw new AppException(4041, new ArrayList<>().add(new String[]{"Staff" + staffId}));
@@ -149,8 +140,6 @@ public class StaffService {
 			if (status == Status.ACTIVE) {
 				staff.setActivatedTime(Instant.now());
 			}
-			if (status == Status.DEACTIVE) {
-			}
 			staff.setStatus(status);
 			return staffRepository.save(staff);
 		} else {
@@ -161,8 +150,7 @@ public class StaffService {
 	public Staff getStaff(Long staffId) {
 		Optional<Staff> staffOptional = staffRepository.findById(staffId);
 		if (staffOptional.isPresent()) {
-			Staff staff = staffOptional.get();
-			return staff;
+			return staffOptional.get();
 		} else {
 			throw new AppException(4041, new ArrayList<>().add(new String[]{"Staff" + staffId}));
 		}

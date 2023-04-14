@@ -27,7 +27,7 @@ public class StaffCreateRequest {
 	@Size(min = 5, max = 50)
 	private String email;
 	private String phoneNumber;
-	private List<Long> customerId;
+	private Long customerId;
 	private Boolean isCustomer;
 	private String note;
 	private String roles;

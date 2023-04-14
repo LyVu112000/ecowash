@@ -1,7 +1,6 @@
 package vuly.thesis.ecowash.core.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vuly.thesis.ecowash.core.entity.Role;
 import vuly.thesis.ecowash.core.entity.User;
 import vuly.thesis.ecowash.core.entity.UserRefreshToken;
 import vuly.thesis.ecowash.core.exception.AppException;
@@ -81,7 +79,7 @@ public class UserService {
 
 
 	public RefreshTokenResponse getNewToken(RefreshTokenRequest request) {
-		UserRefreshToken refreshTokenEntity = userRefreshTokenRepository.findByToken(request.getRefreshToken()).orElseThrow(() -> new RuntimeException());
+		UserRefreshToken refreshTokenEntity = userRefreshTokenRepository.findByToken(request.getRefreshToken()).orElseThrow(RuntimeException::new);
 		User user = refreshTokenEntity.getUser();
 		if (tokenProvider.isTokenExpired(refreshTokenEntity.getToken())) {
 			refreshTokenEntity.setToken(tokenProvider.generateJwtRefreshToken(user.getEmail()));
@@ -105,7 +103,8 @@ public class UserService {
 	}
 
     public User registerNewUserAccount(UserRequest request){
-		User user = User
+
+		return User
                 .builder()
 				.role(roleRepository.findByName(request.getRoles()).orElseThrow(() -> new AppException(4041)))
                 .username(request.getUsername())
@@ -117,14 +116,12 @@ public class UserService {
 				.isCustomer(request.getIsCustomer())
 				.customerId(request.getCustomerId())
                 .build();
-
-        return user;
     }
 
 	public User register(UserRequest request) {
 		log.info("Handling register new user");
 		if (userValidation.checkExistedUsername(request.getUsername())) {
-			List<Object> params = new ArrayList();
+			List<Object> params = new ArrayList<>();
 			params.add(request.getUsername());
 			throw new AppException(HttpStatus.BAD_REQUEST, 4010, params);
 		}

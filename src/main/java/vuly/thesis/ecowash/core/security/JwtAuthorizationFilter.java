@@ -2,6 +2,7 @@ package vuly.thesis.ecowash.core.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 
 @AllArgsConstructor
 @Component
@@ -39,6 +41,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 //            log.info("Logging Response: {} ", response.getStatus());
+            String language = request.getHeader("Accept-Language");
+            if (language == null) {
+                language = "vi";
+            }
+            LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
         } catch (Exception e) {
             log.error("Can NOT set user authentication -> Message: {}", e);
         }
